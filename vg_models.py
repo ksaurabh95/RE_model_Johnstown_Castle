@@ -139,22 +139,22 @@ def vgModel(h ,vgData):
 
 
 
-# def Van_Genuchten_moisure( h , thetar, thetas , alpha, N):
-#     """
-#     calculation of soil moisture based on  Van Genuchten relationship (1981)
-#     thetar = residual moisture content, thetas = saturated soil moisture , h = presure head, 
-#     hs = air entry presure head , N = Van Genuchten paramter , Ss =  specific storage
-#     """
-#     m = 1- 1/N
-#     y =  np.empty([len(h)])
-#     tempI = h < 0 
-#     if h <= 0 :
-#         beta = pow( abs(alpha*h), N )
-#         y = thetar + (thetas - thetar)* pow( 1+ beta, -m )  
-#     else: 
-#         y = thetas
+def Van_Genuchten_moisure( h , thetar, thetas , alpha, N):
+    """
+    calculation of soil moisture based on  Van Genuchten relationship (1981)
+    thetar = residual moisture content, thetas = saturated soil moisture , h = presure head, 
+    hs = air entry presure head , N = Van Genuchten paramter , Ss =  specific storage
+    """
+    m = 1- 1/N
+    y =  np.empty([len(h)])
+    tempI = h < 0 
+    if h <= 0 :
+        beta = pow( abs(alpha*h), N )
+        y = thetar + (thetas - thetar)* pow( 1+ beta, -m )  
+    else: 
+        y = thetas
     
-#     return y
+    return y
 
 
 # def Van_Genuchten_K( h , Ksat, thetar, thetas , alpha, N, n_eta):

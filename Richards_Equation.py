@@ -180,11 +180,9 @@ axes[2].set_ylim([-250,1000])
 axes[2].set_xlabel("Date")
 # fig.suptitle("Variation of Soil Pressure Head with Time", fontsize=14)
 fig.tight_layout()
-# plt.savefig('comparison_water_tension_Johncastle_vgDepthAvg_free_drain.svg', dpi = 300)
-# plt.savefig('comparison_water_tension_Johncastle_vgDepthAvg_free_drain.png', dpi = 300)
 
-# plt.savefig('comparison_water_tension_Johncastle_vgobs_fixedHead.svg', dpi = 300)
-# plt.savefig('comparison_water_tension_Johncastle_vgobs_fixedHead.png', dpi = 300)
+plt.savefig('comparison_water_tension_Johncastle_depthavgRosetta_fixedHead.svg', dpi = 300)
+plt.savefig('comparison_water_tension_Johncastle_depthavgRosetta_fixedHead.png', dpi = 300)
 
 
 plt.show()
@@ -223,11 +221,9 @@ axes[2].set_ylim([0.1,0.5])
 axes[2].set_xlabel("Date")
 # fig.suptitle("Variation of Soil Pressure Head with Time", fontsize=14)
 fig.tight_layout()
-# plt.savefig('comparison_soil_moisture_Johncastle_vgDepthAvg_free_drain.svg', dpi = 300)
-# plt.savefig('comparison_soil_moisture_Johncastle_vgDepthAvg_free_drain.png', dpi = 300)
 
-# plt.savefig('comparison_soil_moisture_Johncastle_vgobs_fixedHead.svg', dpi = 300)
-# plt.savefig('comparison_soil_moisture_Johncastle_vgobs_fixedHead.png', dpi = 300)
+plt.savefig('comparison_soil_moisture_Johncastle_depthavgRosetta_fixedHead.svg', dpi = 300)
+plt.savefig('comparison_soil_moisture_Johncastle_depthavgRosetta_fixedHead.png', dpi = 300)
 
 plt.show()
 

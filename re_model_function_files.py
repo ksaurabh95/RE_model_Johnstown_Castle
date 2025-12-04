@@ -9,12 +9,11 @@ import numpy as np
 from scipy.optimize import fsolve
 import pandas as pd
 from scipy.interpolate import interp1d
-from vg_models import vgModel
 from FeddesRootModel import RootUptakeModel
 # from dataclasses import dataclass, field
 from scipy.sparse.linalg import spsolve
 from scipy.sparse import lil_matrix
-from vg_models import Van_Genuchten_moisure, Van_Genuchten_K
+from vg_models import vgModel, Van_Genuchten_moisure 
 
 
 def assign_vg(depth, df, extend_to):
@@ -252,8 +251,8 @@ def ponding_flux(h,Ksat, thetar, thetas , alpha, N, n_eta,dz_all,z):
     f = lambda h: Van_Genuchten_moisure(h, thetar_current, thetas_current, alpha_current, N_current) - theta_top
 
     # # Initial guess (h must be negative in unsaturated soil)
-    # h_top  = fsolve(f, x0=-1)[0]
-    h_top = - (1.0 / alpha_current) * (Se_top**(-1.0/m) - 1.0)**(1.0 / N_current)
+    h_top  = fsolve(f, x0=-1)[0]
+    # h_top = - (1.0 / alpha_current) * (Se_top**(-1.0/m) - 1.0)**(1.0 / N_current)
     
     h2  = h[i]
     beta =   pow( abs(alpha_current*h2), N_current )
