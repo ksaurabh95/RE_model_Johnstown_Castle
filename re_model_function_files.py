@@ -274,7 +274,12 @@ def ponding_flux(h,Ksat, thetar, thetas , alpha, N, n_eta,dz_all,z):
 
 
 
-def Richards_Solver(profileData, timeData,vgData,MetData,RWUData, h_ini ):
+# def Richards_Solver(profileData, timeData,vgData,MetData,RWUData, h_ini ):
+def Richards_Solver(profileData, timeData, vgData,MetData, RWUData, h_ini,
+    bottom_BC="fixed_head",   # "fixed_head" or "free_drainage"
+    h_bottom=0.001            # fixed head value (m) if saturated bottom is used
+):
+        
     
     z, dz_all, depth = profileData.z,profileData.dz_all, profileData.depth
     # extracting the vg parameters 
@@ -340,6 +345,9 @@ def Richards_Solver(profileData, timeData,vgData,MetData,RWUData, h_ini ):
     Ep_interp_func = interp1d(time_given, PET, kind='next', bounds_error=False, fill_value='extrapolate')
     
     print('Solver Starting ....')
+    # modifying the code to include the ponding condition 
+    is_ponding = False # Initial state
+    
 
 
     while n < tnodes:
@@ -358,7 +366,7 @@ def Richards_Solver(profileData, timeData,vgData,MetData,RWUData, h_ini ):
         theta_old =  theta[:,n]
         
         
-  # performing iteration within each time step      
+        # performing iteration within each time step      
         for m in range(MaxIterations):
             RHS = np.empty([znodes])
             A = lil_matrix((znodes,znodes))         # good for assembly
@@ -377,13 +385,41 @@ def Richards_Solver(profileData, timeData,vgData,MetData,RWUData, h_ini ):
             if q_current > q_ponding_flux[n+1]: 
                 q_i = q_ponding_flux[n+1]
                 # print('ponding')
-                A, RHS = fixed_headBC(A, RHS,z,iloc = znodes-1, h_fixed = -0.001)  # Top boundary condition at saturation
+                A, RHS = fixed_headBC(A, RHS,z,iloc = znodes-1, h_fixed = h_bottom)  # Top boundary condition at saturation
 
             else: A, RHS = top_flux_boundary(A, RHS,h_curr, theta_curr, K[:,n+1], h_old, theta_old, C[:,n+1], Ss, RWU[:,n+1],profileData,dt ,q_i)
-                  
+            # ----- Interior nodes  -----      
             A, RHS = central_zone(A, RHS, h_curr, theta_curr, K[:,n+1], h_old, theta_old, C[:,n+1], Ss, RWU[:,n+1],profileData,dt)
             # A, RHS = bottom_free_drainage(A, RHS,h_curr, theta_curr, K[:,n+1], h_old, theta_old, C[:,n+1], Ss, RWU[:,n+1],profileData,dt)   # free drainage       
-            A, RHS = fixed_headBC(A, RHS,z,iloc = 0, h_fixed = 0.001)  # Bottom boundary condition 
+            # A, RHS = fixed_headBC(A, RHS,z,iloc = 0, h_fixed = 0.001)  # Bottom boundary condition 
+            # ----- bottom boundary condition -----
+
+            if bottom_BC == "free_drainage":
+                # unit-gradient / free drainage at the bottom
+                A, RHS = bottom_free_drainage(
+                    A, RHS,
+                    h_curr, theta_curr, K[:, n+1],
+                    h_old, theta_old,
+                    C[:, n+1], Ss,
+                    RWU[:, n+1],
+                    profileData, dt
+                )
+            elif bottom_BC == "fixed_head":
+                # saturated (fixed head) bottom
+                A, RHS = fixed_headBC(
+                    A, RHS,
+                    z,
+                    iloc=0,
+                    h_fixed=h_bottom
+                )
+            else:
+                raise ValueError(
+                    f"Unknown bottom_BC '{bottom_BC}'. "
+                    "Use 'free_drainage' or 'fixed_head'."
+                )
+            
+            
+            
             X_input = h[:,n+1]+z
             A = A.tocsr()   # convert to CSR for solving
 

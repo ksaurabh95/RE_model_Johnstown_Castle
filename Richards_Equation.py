@@ -92,7 +92,12 @@ timeData = TimeSpec(
     time_given = np.arange(1,len(MetData)+1)
 )
 # running the code 
-theta, K, h, Se,Ea,RWU,t, Ta, Error,q_ponding_flux,q_rain =  Richards_Solver(profileData, timeData,vgData,MetData,RWUData,h_ini )
+theta, K, h, Se,Ea,RWU,t, Ta, Error,q_ponding_flux,q_rain =   Richards_Solver( profileData, timeData,  vgData,  MetData, RWUData, h_ini, 
+                                                                              bottom_BC="fixed_head",   # "fixed_head" or "free_drainage"
+                                                                              h_bottom=0.001   )         # fixed head value (m) if saturated bottom is used
+                                                                            
+
+    
 h_hPa = h*100/1.0197  # obtaining values of water tenion values in hPa
 
 t1 = time.perf_counter() - t0
@@ -181,8 +186,8 @@ axes[2].set_xlabel("Date")
 # fig.suptitle("Variation of Soil Pressure Head with Time", fontsize=14)
 fig.tight_layout()
 
-plt.savefig('comparison_water_tension_Johncastle_depthavgRosetta_fixedHead.svg', dpi = 300)
-plt.savefig('comparison_water_tension_Johncastle_depthavgRosetta_fixedHead.png', dpi = 300)
+# plt.savefig('comparison_water_tension_Johncastle_depthavgRosetta_fixedHead.svg', dpi = 300)
+# plt.savefig('comparison_water_tension_Johncastle_depthavgRosetta_fixedHead.png', dpi = 300)
 
 
 plt.show()
@@ -222,8 +227,8 @@ axes[2].set_xlabel("Date")
 # fig.suptitle("Variation of Soil Pressure Head with Time", fontsize=14)
 fig.tight_layout()
 
-plt.savefig('comparison_soil_moisture_Johncastle_depthavgRosetta_fixedHead.svg', dpi = 300)
-plt.savefig('comparison_soil_moisture_Johncastle_depthavgRosetta_fixedHead.png', dpi = 300)
+# plt.savefig('comparison_soil_moisture_Johncastle_depthavgRosetta_fixedHead.svg', dpi = 300)
+# plt.savefig('comparison_soil_moisture_Johncastle_depthavgRosetta_fixedHead.png', dpi = 300)
 
 plt.show()
 
